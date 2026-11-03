@@ -1,16 +1,16 @@
-# Contributing to LlarTV
+# Contributing to Almali LlarTV
 
-LlarTV is a small personal project. These guidelines keep issues and changes easy to follow.
+Almali LlarTV is a small personal project. These guidelines keep issues and changes easy to follow.
 
 ## Reporting issues
 
-1. Search the [existing issues](https://github.com/mmarkimark/llartv/issues?q=is%3Aissue), open and closed,
+1. Search the [existing issues](https://github.com/almali-dev/almali-llartv/issues?q=is%3Aissue), open and closed,
    before opening a new one.
 2. Open a new issue with one of the forms:
    - **Bug report** for something that does not work as expected.
    - **Feature request** for a new feature or an improvement.
 3. Keep one problem or proposal per issue, and use a Conventional Commit style title (`fix: ...`, `feat: ...`).
-4. For bugs, always include the LlarTV version, the device model, the Android version and the steps to
+4. For bugs, always include the Almali LlarTV version, the device model, the Android version and the steps to
    reproduce. For crashes, attach the output of:
 
    ```sh
@@ -45,5 +45,5 @@ screenshot to the pull request.
 ## Releases
 
 Releases are tagged `vMAJOR.MINOR` on `main`, recorded in [CHANGELOG.md](CHANGELOG.md) and published on the
-[Releases](https://github.com/mmarkimark/llartv/releases) page with the built APK attached. Update
+[Releases](https://github.com/almali-dev/almali-llartv/releases) page with the built APK attached. Update
 `versionName` and `versionCode` in `app/build.gradle` for each release.

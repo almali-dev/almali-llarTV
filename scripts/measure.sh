@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# Measures LlarTV's size, cold start, Home return and RAM on a connected TV or emulator.
+# Measures Almali LlarTV's size, cold start, Home return and RAM on a connected TV or emulator.
 # The same procedure is repeated for every roadmap milestone, so the numbers stay comparable.
 #
 # Usage: scripts/measure.sh [--serial <serial>] [--apk <file>] [--runs <n>] [--label <name>] [--out <file>]
@@ -30,7 +30,7 @@ if [ -z "$SERIAL" ]; then
 fi
 D="$SERIAL"
 [ "$("$ADB" -s "$D" get-state 2>/dev/null)" = device ] || fail "$D is not reachable over ADB."
-[ "$("$ADB" -s "$D" shell pm path "$PKG" 2>/dev/null | grep -c '^package:')" -ge 1 ] || fail "LlarTV is not installed on $D."
+[ "$("$ADB" -s "$D" shell pm path "$PKG" 2>/dev/null | grep -c '^package:')" -ge 1 ] || fail "Almali LlarTV is not installed on $D."
 
 MODEL=$(A shell getprop ro.product.model | tr -d '\r')
 RELEASE=$(A shell getprop ro.build.version.release | tr -d '\r')
@@ -103,7 +103,7 @@ COLD_ONE >/dev/null || true
 say "Cold start, $RUNS runs..."
 for _ in $(seq 1 "$RUNS"); do COLD+=("$(COLD_ONE)"); done
 
-# The Home key only returns to LlarTV when LlarTV is the default home, like install.sh sets it on the TV.
+# The Home key only returns to Almali LlarTV when it is the default home, like install.sh sets it on the TV.
 PREV_HOME=$(current_home)
 if [ "$PREV_HOME" != "$HOME_ACT" ]; then
   A shell cmd package set-home-activity "$HOME_ACT" >/dev/null 2>&1 || true
@@ -125,7 +125,7 @@ say "RAM, 3 samples..."
 for _ in 1 2 3; do RAMS+=("$(RAM_ONE)"); sleep 1; done
 
 REPORT=$(cat <<EOF
-LlarTV performance measurement
+Almali LlarTV performance measurement
 label:      $LABEL
 model:      $MODEL
 android:    $RELEASE (SDK $SDK)
@@ -158,7 +158,7 @@ note:       the default home was $RESTORED during the runs and was restored afte
 "
 else
   REPORT="$REPORT
-note:       LlarTV was already the default home on this device.
+note:       Almali LlarTV was already the default home on this device.
 "
 fi
 printf '%s\n' "$REPORT"

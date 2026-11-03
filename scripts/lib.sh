@@ -1,11 +1,11 @@
 # shellcheck shell=bash disable=SC2034
-# Shared helpers for the LlarTV scripts. Sourced, not run.
+# Shared helpers for the Almali LlarTV scripts. Sourced, not run.
 # Works on Linux, macOS and Windows (Git Bash).
 
 PKG=io.github.mmarkimark.llartv
 HOME_ACT=$PKG/.HomeActivity
 DREAM=$PKG/.BingDream
-REPO=mmarkimark/llartv
+REPO=almali-dev/almali-llartv
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 STATE_ROOT="$ROOT/.state"
 

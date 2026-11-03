@@ -77,9 +77,9 @@ public class LanguageTest {
         Strings es = strings(Language.ES);
         assertEquals(Language.ES, es.language);
         assertEquals("es", es.locale.getLanguage());
-        assertEquals("Ajustes de LlarTV", es.get(R.string.settings_title));
-        assertEquals("Configuració de LlarTV", strings(Language.CA).get(R.string.settings_title));
-        assertEquals("LlarTV settings", strings(Language.EN).get(R.string.settings_title));
+        assertEquals("Ajustes de Almali LlarTV", es.get(R.string.settings_title));
+        assertEquals("Configuració d'Almali LlarTV", strings(Language.CA).get(R.string.settings_title));
+        assertEquals("Almali LlarTV settings", strings(Language.EN).get(R.string.settings_title));
     }
 
     // ---------------------------------------------------------------- the translations

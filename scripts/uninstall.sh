@@ -1,5 +1,5 @@
 #!/bin/bash
-# Remove LlarTV and put back the TV's own home screen and screensaver.
+# Remove Almali LlarTV and put back the TV's own home screen and screensaver.
 # Usage: ./scripts/uninstall.sh [TV-IP]
 set -u
 # shellcheck source=scripts/lib.sh
@@ -25,9 +25,9 @@ fi
 
 PREV_HOME=$(cat "$STATE/previous-home" 2>/dev/null)
 if installed; then
-  say "Removing LlarTV: $(A uninstall "$PKG" 2>&1 | tail -1)"
+  say "Removing Almali LlarTV: $(A uninstall "$PKG" 2>&1 | tail -1)"
 else
-  say "LlarTV was not installed"
+  say "Almali LlarTV was not installed"
 fi
 case "$PREV_HOME" in */*) [ "$PREV_HOME" != "$HOME_ACT" ] && S cmd package set-home-activity "$PREV_HOME" >/dev/null;; esac
 rm -f "$STATE/previous-home" "$STATE/previous-screensaver" "$STATE/home.conf"
