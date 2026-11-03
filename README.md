@@ -1,28 +1,37 @@
-# LlarTV
+<p align="center">
+  <a href="https://github.com/almali-dev">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/almali-dev/.github/main/brand/almali-horizontal-dark.svg">
+      <img alt="Almali" src="https://raw.githubusercontent.com/almali-dev/.github/main/brand/almali-horizontal.svg" height="48">
+    </picture>
+  </a>
+</p>
+
+# Almali LlarTV
 
 A lightweight, native home screen for Android TV. (*Llar* is Catalan for "home".)
 
 **The goal:** a light, fast Android TV home screen inspired by Apple's tvOS — a calm screen with a large clock, a
 dock of your favourite apps and a full-screen photo, instead of rows of recommendations and ads.
 
-**Available in English, Catalan and Spanish** — choose the interface language in the LlarTV settings or with
+**Available in English, Catalan and Spanish** — choose the interface language in the Almali LlarTV settings or with
 `language=`. The screenshots below show the English interface.
 
-[![Release](https://img.shields.io/badge/release-v1.6-blue)](https://github.com/mmarkimark/llartv/releases/tag/v1.6)
-[![CI](https://github.com/mmarkimark/llartv/actions/workflows/ci.yml/badge.svg)](https://github.com/mmarkimark/llartv/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/badge/release-v1.6-blue)](https://github.com/almali-dev/almali-llartv/releases/tag/v1.6)
+[![CI](https://github.com/almali-dev/almali-llartv/actions/workflows/ci.yml/badge.svg)](https://github.com/almali-dev/almali-llartv/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Android TV 9+](https://img.shields.io/badge/Android%20TV-9%2B-informational)
 ![Languages: English, Catalan, Spanish](https://img.shields.io/badge/languages-English%20%C2%B7%20Catal%C3%A0%20%C2%B7%20Espa%C3%B1ol-informational)
 
 ![LlarTV home screen](docs/screenshots/day.jpg)
 
-LlarTV replaces the stock Android TV launcher with a clean, fast home screen built for the remote: a large clock, a
+Almali LlarTV replaces the stock Android TV launcher with a clean, fast home screen built for the remote: a large clock, a
 dock with your streaming apps, a full app grid, daily wallpapers and a matching screensaver. It is written in plain
 Java, with measured foreground Home PSS of about 35 MiB on the emulator and 63 MiB on the reference TV.
 It does no background polling: the clock and network name update from system broadcasts, and network data is
 fetched only while the home screen is showing.
 
-> **Project status:** LlarTV is a personal project. It is developed and tested on a Xiaomi MiTV-MSSP3
+> **Project status:** Almali LlarTV is a personal project. It is developed and tested on a Xiaomi MiTV-MSSP3
 > (Android TV 11) and an Android TV 11 emulator. Other devices should work but are not regularly tested.
 
 ## Contents
@@ -184,11 +193,11 @@ The settings menu and the screensaver on the TV:
 3. Open *Settings → Network & Internet*, select your network and note the TV's **IP address**, for example
    `192.168.1.50`.
 
-**2. Get LlarTV** on the computer, with Git or as a ZIP (*Code → Download ZIP* on GitHub, then unzip it):
+**2. Get Almali LlarTV** on the computer, with Git or as a ZIP (*Code → Download ZIP* on GitHub, then unzip it):
 
 ```sh
-git clone https://github.com/mmarkimark/llartv.git
-cd llartv
+git clone https://github.com/almali-dev/almali-llartv.git
+cd almali-llartv
 ```
 
 **3. Install it**, using your TV's IP address:
@@ -353,12 +362,12 @@ docs/design/                                     Design notes
 
 ## Reporting issues
 
-Bugs and feature requests are tracked in [GitHub Issues](https://github.com/mmarkimark/llartv/issues).
+Bugs and feature requests are tracked in [GitHub Issues](https://github.com/almali-dev/almali-llartv/issues).
 
-1. Search [existing issues](https://github.com/mmarkimark/llartv/issues?q=is%3Aissue), including closed ones,
+1. Search [existing issues](https://github.com/almali-dev/almali-llartv/issues?q=is%3Aissue), including closed ones,
    to avoid duplicates.
 2. Choose **New issue** and pick the form that fits: **Bug report** or **Feature request**.
-3. Fill in every required field. For bugs, include the LlarTV version, the device model, the Android version,
+3. Fill in every required field. For bugs, include the Almali LlarTV version, the device model, the Android version,
    clear steps to reproduce, and a `logcat` excerpt when the app crashes:
 
    ```sh
@@ -394,7 +403,7 @@ LlarTV started from the launcher of an Android TV debloating toolkit. Its lineag
 | [tv-vibehack](https://github.com/Gathin23/cleanyourtv) (now *cleanyourtv*) | [Gathin](https://github.com/Gathin23) | Original launcher design and concept (MIT) |
 | [android-tv-debloat](https://github.com/amirulmzlan/android-tv-debloat) | [Amirul Mazlan](https://github.com/amirulmzlan) | TvHome, the native launcher LlarTV is built on (MIT) |
 | [android-tv-debloat](https://github.com/wakjenal/android-tv-debloat) (fork) | [wakjenal](https://github.com/wakjenal) | Fork LlarTV was started from |
-| LlarTV (this repository) | [mmarkimark](https://github.com/mmarkimark) | Bing wallpapers, screensaver, time-of-day modes, weather and news, Catalan, Spanish and English interface |
+| Almali LlarTV (this repository) | [mmarkimark](https://github.com/mmarkimark) | Bing wallpapers, screensaver, time-of-day modes, weather and news, Catalan, Spanish and English interface |
 
 Thank you to Gathin, Amirul Mazlan and wakjenal: their debloating toolkits and their Apple TV-style launcher are
 where LlarTV started, and we used them to clean up our own TV before building on top of them.
@@ -409,7 +418,13 @@ Third-party resources:
   [docs/quotes.md](docs/quotes.md).
 - Wallpapers and their titles are provided by Microsoft Bing and remain the property of their respective owners.
 
+## Part of Almali
+
+This project is part of [Almali](https://github.com/almali-dev), a small collection of independent, open-source
+tools for home media and self-hosting, built and maintained by [@mmarkimark](https://github.com/mmarkimark).
+Each project works on its own: install only what you need.
+
 ## License
 
-LlarTV is released under the [MIT License](LICENSE). The copyright notices of the original authors are retained
+Almali LlarTV is released under the [MIT License](LICENSE). The copyright notices of the original authors are retained
 as the license requires.

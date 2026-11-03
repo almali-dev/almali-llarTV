@@ -13,7 +13,7 @@ import org.junit.rules.TemporaryFolder;
 public class MusicTrackTest {
     @Rule public TemporaryFolder tmp = new TemporaryFolder();
     static final byte[] AUDIO = {1, 2, 3, 4, 5};
-    static final String SOURCE = "https://github.com/mmarkimark/llartv/releases/download/v1.4/test.mp3";
+    static final String SOURCE = "https://github.com/almali-dev/almali-llartv/releases/download/v1.4/test.mp3";
     static final String ASSET = "https://release-assets.githubusercontent.com/example/test.mp3?signature=private";
 
     String hash() throws Exception {

@@ -3,7 +3,7 @@ package io.github.mmarkimark.llartv;
 /** Original audio bytes and immutable integrity pins. Audio lives outside the APK. */
 final class MusicTrack {
     static final int COUNT = 3;
-    private static final String RELEASE = "https://github.com/mmarkimark/llartv/releases/download/v1.4/";
+    private static final String RELEASE = "https://github.com/almali-dev/almali-llartv/releases/download/v1.4/";
     final String title, file, url, sha256;
     final long bytes;
 

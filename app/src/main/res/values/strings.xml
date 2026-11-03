@@ -3,7 +3,7 @@
      values-es and values-en carry the same names, placeholders and plurals (LanguageTest checks it).
      Brand names, the news credits and anything an external feed supplies are not here: they are never translated. -->
 <resources>
-    <string name="app_name" translatable="false">LlarTV</string>
+    <string name="app_name" translatable="false">Almali LlarTV</string>
 
     <!-- Home: the pills, the cards and the messages -->
     <string name="inputs">Entrades</string>
@@ -80,7 +80,7 @@
     </plurals>
 
     <!-- LlarTV settings -->
-    <string name="settings_title">Configuració de LlarTV</string>
+    <string name="settings_title">Configuració d\'Almali LlarTV</string>
     <string name="system_settings">Configuració del sistema</string>
     <string name="language">Idioma</string>
     <string name="clock">Rellotge</string>
@@ -122,12 +122,12 @@
     <string name="all_day">Tot el dia</string>
     <string name="cant_save">No s\'ha pogut desar</string>
     <string name="start_screen">Iniciar el protector</string>
-    <string name="screen_not_selected">LlarTV no és el protector de la TV: tria\'l a Configuració del sistema &gt; Protector de pantalla</string>
+    <string name="screen_not_selected">Almali LlarTV no és el protector de la TV: tria\'l a Configuració del sistema &gt; Protector de pantalla</string>
     <string name="screen_disabled">El protector està desactivat: activa\'l a Configuració del sistema &gt; Protector de pantalla</string>
     <string name="screen_unchecked">No es pot comprovar quin protector té la TV</string>
     <string name="screen_cant_start">Aquesta TV no permet iniciar el protector des d\'aquí</string>
     <string name="reset_settings">Restablir la configuració</string>
-    <string name="reset_scope">Torna als valors per defecte tots els ajustos de LlarTV desats a home.conf: idioma (català), rellotge, fons i fotos, mode nit, temps, notícies, protector, música, columnes, dock, apps amagades i ordre de la graella. Es mantenen els comentaris i les línies desconegudes de home.conf, dock.txt, les imatges i la música descarregades o copiades, les apps instal·lades i la configuració d\'Android, com el llançador i el protector de pantalla.</string>
+    <string name="reset_scope">Torna als valors per defecte tots els ajustos d\'Almali LlarTV desats a home.conf: idioma (català), rellotge, fons i fotos, mode nit, temps, notícies, protector, música, columnes, dock, apps amagades i ordre de la graella. Es mantenen els comentaris i les línies desconegudes de home.conf, dock.txt, les imatges i la música descarregades o copiades, les apps instal·lades i la configuració d\'Android, com el llançador i el protector de pantalla.</string>
     <string name="reset_cancel">Cancel·lar</string>
     <string name="reset_confirm">Restablir</string>
     <string name="reset_done">S\'ha restablert la configuració</string>

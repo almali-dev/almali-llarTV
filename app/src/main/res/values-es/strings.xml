@@ -76,7 +76,7 @@
     </plurals>
 
     <!-- LlarTV settings -->
-    <string name="settings_title">Ajustes de LlarTV</string>
+    <string name="settings_title">Ajustes de Almali LlarTV</string>
     <string name="system_settings">Ajustes del sistema</string>
     <string name="language">Idioma</string>
     <string name="clock">Reloj</string>
@@ -118,12 +118,12 @@
     <string name="all_day">Todo el día</string>
     <string name="cant_save">No se ha podido guardar</string>
     <string name="start_screen">Iniciar el salvapantallas</string>
-    <string name="screen_not_selected">LlarTV no es el salvapantallas de la TV: elígelo en Ajustes del sistema &gt; Salvapantallas</string>
+    <string name="screen_not_selected">Almali LlarTV no es el salvapantallas de la TV: elígelo en Ajustes del sistema &gt; Salvapantallas</string>
     <string name="screen_disabled">El salvapantallas está desactivado: actívalo en Ajustes del sistema &gt; Salvapantallas</string>
     <string name="screen_unchecked">No se puede comprobar qué salvapantallas tiene la TV</string>
     <string name="screen_cant_start">Esta TV no permite iniciar el salvapantallas desde aquí</string>
     <string name="reset_settings">Restablecer los ajustes</string>
-    <string name="reset_scope">Devuelve a los valores por defecto todos los ajustes de LlarTV guardados en home.conf: idioma (catalán), reloj, fondo y fotos, modo noche, tiempo, noticias, salvapantallas, música, columnas, dock, apps ocultas y orden de la cuadrícula. Se mantienen los comentarios y las líneas desconocidas de home.conf, dock.txt, las imágenes y la música descargadas o copiadas, las apps instaladas y los ajustes de Android, como el launcher y el salvapantallas.</string>
+    <string name="reset_scope">Devuelve a los valores por defecto todos los ajustes de Almali LlarTV guardados en home.conf: idioma (catalán), reloj, fondo y fotos, modo noche, tiempo, noticias, salvapantallas, música, columnas, dock, apps ocultas y orden de la cuadrícula. Se mantienen los comentarios y las líneas desconocidas de home.conf, dock.txt, las imágenes y la música descargadas o copiadas, las apps instaladas y los ajustes de Android, como el launcher y el salvapantallas.</string>
     <string name="reset_cancel">Cancelar</string>
     <string name="reset_confirm">Restablecer</string>
     <string name="reset_done">Se han restablecido los ajustes</string>

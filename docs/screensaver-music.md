@@ -65,9 +65,9 @@ The [official attribution instructions](https://incompetech.com/music/royalty-fr
 
 The original MP3s are not modified; playing an excerpt does not change the distributed file. The distribution is
 **separate v1.4 GitHub release assets**, not app hotlinks to the composer and not APK resources:
-[`music-macleod-chill-wave-v1.mp3`](https://github.com/mmarkimark/llartv/releases/download/v1.4/music-macleod-chill-wave-v1.mp3)
-and [`music-macleod-dream-culture-v1.mp3`](https://github.com/mmarkimark/llartv/releases/download/v1.4/music-macleod-dream-culture-v1.mp3).
-Both assets are published with the [v1.4 release](https://github.com/mmarkimark/llartv/releases/tag/v1.4): their
+[`music-macleod-chill-wave-v1.mp3`](https://github.com/almali-dev/almali-llartv/releases/download/v1.4/music-macleod-chill-wave-v1.mp3)
+and [`music-macleod-dream-culture-v1.mp3`](https://github.com/almali-dev/almali-llartv/releases/download/v1.4/music-macleod-dream-culture-v1.mp3).
+Both assets are published with the [v1.4 release](https://github.com/almali-dev/almali-llartv/releases/tag/v1.4): their
 public HTTPS downloads, redirects and hashes are verified, and a cold-cache Android device downloaded both
 through the app with the pinned bytes. The same attribution is accessible offline through the music-credits row
 in the settings menu.
