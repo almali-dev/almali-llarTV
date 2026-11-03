@@ -110,6 +110,26 @@ final class DailyWallpaper {
         }
     }
 
+    /**
+     * The identity of the image Home is showing: its name, the time it was written and its size. Home compares it
+     * before decoding, so the same photo is decoded once however often loadWallpaper runs, and a result that
+     * arrives from a background decode is dropped when the stamp has moved on since. 0 when there is no image.
+     */
+    static long stamp(File f) {
+        return f == null ? 0 : f.getName().hashCode() * 31L + (f.lastModified() ^ f.length());
+    }
+
+    /**
+     * The subsampling for a decode: the largest power of two that still fills a screen of screenWidth pixels, so a
+     * photo wider than the screen is decoded smaller instead of full size. 1 when it already fits.
+     */
+    static int sampleFor(int imageWidth, int screenWidth) {
+        int sample = 1;
+        if (screenWidth <= 0) return sample;
+        while (imageWidth / (sample * 2) >= screenWidth) sample *= 2;
+        return sample;
+    }
+
     /** Saved images with their texts, newest first (empty when none). */
     static List<Slide> slides(File dir) {
         List<Slide> slides = new ArrayList<>();
