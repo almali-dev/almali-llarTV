@@ -5,6 +5,34 @@ All notable changes to LlarTV are documented in this file. The format is based o
 
 ## [Unreleased]
 
+## [1.8] - 2026-11-03
+
+### Added
+
+- Home says when the network has no Internet (#95). A TV can be connected to a network with no way out (a router
+  without an uplink, a captive portal): the Wi-Fi pill used to show the network name while the weather and news
+  cards quietly disappeared, because their downloads failed. It now reads *Sense Internet* / *Sin Internet* /
+  *No Internet* in that case. Nothing is claimed before it is observed: until Android reports the state, the pill
+  keeps showing the network.
+- The settings value list marks the value in use (#94). The focus moves while the list is open, so the saved
+  option now keeps the panel's accent colour and a heavier weight, and you can see at a glance which one is set
+  without closing the list. The reset confirmation and the hidden-apps list mark nothing: their choices are not
+  saved values.
+
+### Changed
+
+- Home decodes the wallpaper off the main thread (#96), the way the screensaver already did. The photo now
+  appears just after the first frame instead of before it, so starting Home no longer waits for a screen-sized
+  JPEG to be decoded and averaged for the dock tint. The paired measurement is in
+  [docs/performance/v1.8.md](docs/performance/v1.8.md).
+
+### Fixed
+
+- The wallpaper list can no longer point outside its own directory (#93). The list of downloaded photos lives in
+  external storage, where another app can rewrite it on Android 9 and 10, and a name containing `../` escaped the
+  photo directory, so Home and the screensaver could be made to show any image of the shared volume. Only the
+  names LlarTV itself writes are used now.
+
 ## [1.7] - 2026-11-03
 
 ### Changed
@@ -265,7 +293,8 @@ First release.
 - Scripts to install, configure and uninstall LlarTV over ADB: `scripts/install.sh`, `scripts/config.sh` and
   `scripts/uninstall.sh`.
 
-[Unreleased]: https://github.com/almali-dev/almali-llartv/compare/v1.7...HEAD
+[Unreleased]: https://github.com/almali-dev/almali-llartv/compare/v1.8...HEAD
+[1.8]: https://github.com/almali-dev/almali-llartv/compare/v1.7...v1.8
 [1.7]: https://github.com/almali-dev/almali-llartv/compare/v1.6...v1.7
 [1.6]: https://github.com/mmarkimark/llartv/compare/v1.5...v1.6
 [1.5]: https://github.com/mmarkimark/llartv/compare/v1.4...v1.5

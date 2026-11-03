@@ -17,7 +17,7 @@ dock of your favourite apps and a full-screen photo, instead of rows of recommen
 **Available in English, Catalan and Spanish** — choose the interface language in the Almali LlarTV settings or with
 `language=`. The screenshots below show the English interface.
 
-[![Release](https://img.shields.io/badge/release-v1.7-blue)](https://github.com/almali-dev/almali-llartv/releases/tag/v1.7)
+[![Release](https://img.shields.io/badge/release-v1.8-blue)](https://github.com/almali-dev/almali-llartv/releases/tag/v1.8)
 [![CI](https://github.com/almali-dev/almali-llartv/actions/workflows/ci.yml/badge.svg)](https://github.com/almali-dev/almali-llartv/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Android TV 9+](https://img.shields.io/badge/Android%20TV-9%2B-informational)
