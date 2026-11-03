@@ -66,6 +66,23 @@ final class DailyWallpaper {
     static String fileName(String url) { return PREFIX + Integer.toHexString(url.hashCode()) + ".jpg"; }
 
     /**
+     * Whether a name listed in wallpapers.txt is one this app wrote, so it is used as a file name inside the
+     * photo directory. The list lives in external storage, where another app could rewrite it on Android 9 and
+     * 10, and `new File(dir, name)` follows "../" out of the directory: an unchecked name would let Home and the
+     * screensaver show any image of the shared volume (#93). Only what fileName() produces is accepted, so the
+     * name carries no separator at all.
+     */
+    static boolean ownName(String name) {
+        if (name == null || name.length() <= PREFIX.length() + 4 || !name.startsWith(PREFIX) || !name.endsWith(".jpg"))
+            return false;
+        for (int i = PREFIX.length(); i < name.length() - 4; i++) {
+            char c = name.charAt(i);
+            if ((c < '0' || c > '9') && (c < 'a' || c > 'f')) return false;
+        }
+        return true;
+    }
+
+    /**
      * Downloads the images that aren't on disk yet, rewrites the list, and deletes images that left it.
      * A URL source (not Bing) is always re-downloaded, since the image behind it may change.
      * Images that fail to download are left out; throws only when none is available.
@@ -101,8 +118,9 @@ final class DailyWallpaper {
             while ((l = r.readLine()) != null) {
                 String[] p = l.split("\t", -1);
                 String name = p[0].trim();
+                if (!ownName(name)) continue;   // never let a listed name leave the directory (#93)
                 File f = new File(dir, name);
-                if (!name.isEmpty() && f.exists())
+                if (f.exists())
                     slides.add(new Slide(f, p.length > 1 ? p[1].trim() : "", p.length > 2 ? p[2].trim() : ""));
             }
         } catch (Exception ignored) {}

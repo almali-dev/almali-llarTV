@@ -74,6 +74,29 @@ public class DailyWallpaperTest {
         assertEquals(2, DailyWallpaper.images(dir).size());
     }
 
+    @Test public void aListedNameNeverLeavesItsDirectory() throws Exception {
+        // A name with ../ resolves outside dir (an absolute name does not: File(parent, child) keeps the parent),
+        // so a list written by another app could make Home show any image of the shared volume (#93).
+        File outside = tmp.newFolder();
+        new File(outside, "private.jpg").createNewFile();
+        File dir = dirWith("../" + outside.getName() + "/private.jpg\tA\ta\nwallpaper-a.jpg\tB\tb", "wallpaper-a.jpg");
+        List<DailyWallpaper.Slide> s = DailyWallpaper.slides(dir);
+        assertEquals(1, s.size());
+        assertEquals("wallpaper-a.jpg", s.get(0).file.getName());
+    }
+
+    @Test public void onlyTheNamesTheAppItselfWritesAreUsed() throws Exception {
+        // fileName() always writes wallpaper-<hex>.jpg; anything else in the list is not ours.
+        assertTrue(DailyWallpaper.ownName(DailyWallpaper.fileName("https://www.bing.com/a_1920x1080.jpg")));
+        assertTrue(DailyWallpaper.ownName(DailyWallpaper.fileName("https://example.com/b.jpg")));
+        assertTrue(DailyWallpaper.ownName("wallpaper-a.jpg"));
+        assertFalse(DailyWallpaper.ownName("../other/private.jpg"));
+        assertFalse(DailyWallpaper.ownName("wallpaper-a.jpg/../../x.jpg"));
+        assertFalse(DailyWallpaper.ownName("wallpaper.jpg"));
+        assertFalse(DailyWallpaper.ownName("holiday.png"));
+        assertFalse(DailyWallpaper.ownName(""));
+    }
+
     @Test public void missingImagesAreSkipped() throws Exception {
         File dir = dirWith("wallpaper-a.jpg\tA\ta\nwallpaper-gone.jpg\tB\tb", "wallpaper-a.jpg");
         assertEquals(1, DailyWallpaper.slides(dir).size());
