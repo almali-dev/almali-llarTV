@@ -209,22 +209,68 @@ public class QuotesTest {
 
     // ---------------------------------------------------------------- the bundled corpora, once they exist
 
-    @Test public void theBundledFilesHaveAThousandQuotesWithTheirSource() throws Exception {
+    /** Lines the owner rejected: their point is not encouragement, so they must not come back (S3). */
+    static final java.util.Set<String> REJECTED = new java.util.HashSet<>(java.util.Arrays.asList(
+        "Qui té cinc dits a les mans, ja pot portar guants.",
+        "Ocell de bec ample, menja poc i molt escampa.",
+        "Trons a la mar, aigua a la terra.",
+        "El vi és la llet dels vells i la llet, el vi dels infants.",
+        "Si veus l'eriçó a l'arbocer, la tardor ja ve.",
+        "Any de rosada, any de forment.",
+        "Qui no té pa, moltes se'n pensa.",
+        "La mar no es mou sense vent.",
+        "La pobresa no té amics, la riquesa té enemics.",
+        "Un ocell sense ales és bo d'agafar.",
+        "Massa fruit trenca la branca.",
+        "A cada aucell son niu és bell.",
+        "Temps passat, sempre envejat.",
+        "La mentida aviat és agafada.",
+        "Bones confiances i males collites acaben les cases.",
+        "Amic malvat, deixa la palla i s'enduu el blat.",
+        "Buena es la nieve que en su tiempo viene",
+        "Hasta el saber cansa, cuando es el saber por oficio",
+        "Arrieros somos y en el camino andamos",
+        "De pequeñico se doma al mimbre",
+        "La mayor discreción es acomodarse al tiempo",
+        "El que no cumple su palabra al fin su desdicha labra",
+        "De hombres es errar y de bestias porfiar",
+        "Still water runs deep.",
+        "As proud as a peacock.",
+        "There's no fool like an old fool.",
+        "It is the early bird that gets the worm.",
+        "All work and no play makes Jack a dull boy.",
+        "Every rose has its thorn.",
+        "Be careful what you wish for, you just might get it.",
+        "Willful waste makes woeful want.",
+        "You don't get nothing for nothing.",
+        "The boughs that bear most hang lowest.",
+        "Better a lean peace than a fat victory.",
+        "Truth seeks no corners.",
+        "Friendship is Love without wings."));
+
+    /** The same number of quotes in every language (v1.7: short, motivational lines; see docs/quotes.md). */
+    static final int QUOTES_PER_LANGUAGE = 675;
+
+    @Test public void theBundledFilesHaveTheSameNumberOfQuotesWithTheirSource() throws Exception {
         File dir = assetsDir();
         for (String lang : Language.OPTIONS) {
             File f = new File(dir, "quotes/" + lang + ".tsv");
             assumeTrue("not bundled yet: " + f, f.isFile());
             List<Quotes.Quote> q;
             try (InputStream in = new FileInputStream(f)) { q = Quotes.parse(in); }
-            assertEquals(lang, 1000, q.size());   // one thousand quotes per language (S2)
+            assertEquals(lang, QUOTES_PER_LANGUAGE, q.size());   // the same count in every language (S5)
             int sayings = 0;
+            java.util.Set<String> seen = new java.util.HashSet<>();
             for (Quotes.Quote x : q) {
                 assertFalse(lang + ": " + x.text, x.source.isEmpty());
                 assertTrue(lang + ": " + x.text, x.source.startsWith("https://"));
                 assertNotNull(x.author);
                 if (x.author.isEmpty()) sayings++;
                 assertTrue(lang + ": a translator needs an author: " + x.text, x.translator.isEmpty() || !x.author.isEmpty());
-                assertTrue(lang + ": " + x.text, x.text.length() <= 160);
+                assertFalse(lang + ": an author name is not clean: " + x.author, x.author.contains("_") || x.author.contains("  "));
+                assertTrue(lang + ": too long for the quote line: " + x.text, x.text.length() <= 60);
+                assertFalse(lang + ": a rejected line is back: " + x.text, REJECTED.contains(x.text));
+                assertTrue(lang + ": the same line twice: " + x.text, seen.add(x.text));   // no duplicates (S5)
             }
             assertTrue(lang + ": only " + sayings + " of " + q.size() + " sayings", sayings * 4 >= q.size() && sayings * 4 <= q.size() * 3);
             assertTrue(lang + ": more than ten lines for one author", countAuthors(q) <= 10);

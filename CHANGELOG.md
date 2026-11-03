@@ -5,6 +5,18 @@ All notable changes to LlarTV are documented in this file. The format is based o
 
 ## [Unreleased]
 
+### Changed
+
+- The quote of the day is re-curated in the three languages (675 lines each, the same number in every language; it was 1,000): the lines are now **short** (at most
+  60 characters, so a quote always fits the space reserved for it on the TV) and **motivational** (each line urges,
+  encourages or affirms: effort, hope, courage, patience, learning, kindness, self-belief, resilience or curiosity).
+  Lines whose point is a warning, a prediction of misfortune, cautious advice, a plain description of an everyday
+  fact or custom, mockery or fatalism are gone, and the ones that stay stand alone under the date. The provenance
+  rules are unchanged (every author died before 1956, every line names the page it was checked against, the
+  translations are public-domain ones or LlarTV's own from the public-domain original) and the app behaves exactly
+  as in 1.6: the same line all day, the line of the day at `epochDay mod 675`, in the interface language (a file now repeats after 675 days).
+  The rules, the curation method and the attribution: [docs/quotes.md](docs/quotes.md).
+
 ## [1.6] - 2026-11-01
 
 ### Added
