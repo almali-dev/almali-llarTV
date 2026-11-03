@@ -557,11 +557,15 @@ public class SettingsActivity extends Activity {
     }
 
     void applyPanelFocus() {
+        // The focus moves while the list is open, so the saved value keeps its own mark (#94).
+        int marked = panelRow == null ? -1
+                : SidePanel.markedOption(panelRow.key, panelRow.isAction(), panelRow.selected);
         for (int i = 0; i < panelList.getChildCount(); i++) {
             TextView t = (TextView) panelList.getChildAt(i);
-            boolean on = i == panelIdx;
+            boolean on = i == panelIdx, saved = i == marked;
             t.setBackgroundColor(on ? FOCUS_BG : Color.TRANSPARENT);
-            t.setTextColor(on ? Color.WHITE : INK);
+            t.setTextColor(on ? Color.WHITE : saved ? ACCENT : INK);
+            t.setTypeface(fonts.get(saved ? 500 : 400));
         }
         final View v = panelList.getChildAt(panelIdx);
         panelScroll.post(() -> {

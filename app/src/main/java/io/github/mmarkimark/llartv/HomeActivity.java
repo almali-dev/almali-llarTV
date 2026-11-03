@@ -121,6 +121,7 @@ public class HomeActivity extends Activity {
     boolean wxFailed, wallFailed, fixFailed;   // the last attempt failed: retried when the network comes back (#38)
     final Reconnect reconnect = new Reconnect();
     ConnectivityManager.NetworkCallback netCallback;
+    Boolean netValidated;   // Android's validated capability; null until the first callback (NetworkLabel)
     // football fixtures card
     LinearLayout matchCard;
     TextView mLabel, mTitle, mComp, mWhen, mCountdown;
@@ -281,6 +282,7 @@ public class HomeActivity extends Activity {
 
     void unwatchNetwork() {
         reconnect.reset();
+        netValidated = null;   // nothing is observed while Home is away: the pill claims no problem it cannot see
         if (netCallback == null) return;
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         try { if (cm != null) cm.unregisterNetworkCallback(netCallback); } catch (RuntimeException ignored) {}
@@ -289,7 +291,12 @@ public class HomeActivity extends Activity {
 
     /** Usable Internet came back: only content whose last attempt failed is made due; the usual rules fetch it. */
     void onNetwork(boolean usable) {
-        if (netCallback == null || !reconnect.regained(usable, System.currentTimeMillis())) return;
+        if (netCallback == null) return;
+        if (netValidated == null || netValidated != usable) {   // the pill follows every change, not only a recovery
+            netValidated = usable;
+            updateWifi();
+        }
+        if (!reconnect.regained(usable, System.currentTimeMillis())) return;
         if (wxFailed) lastWx = 0;
         if (wallFailed) lastWallFetch = 0;
         if (fixFailed) lastFetch = 0;
@@ -1378,7 +1385,11 @@ public class HomeActivity extends Activity {
         try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = cm.getActiveNetworkInfo();
-            if (ni != null && ni.isConnected()) {
+            boolean connected = ni != null && ni.isConnected();
+            // A connected network without validated Internet makes the cards fail: say so instead of its name (#95).
+            if (NetworkLabel.of(connected, netValidated) == NetworkLabel.Pill.NO_INTERNET) {
+                s = tx.get(R.string.no_internet);
+            } else if (connected) {
                 if (ni.getType() == ConnectivityManager.TYPE_ETHERNET) s = tx.get(R.string.ethernet);
                 else if (ni.getType() == ConnectivityManager.TYPE_WIFI) {
                     WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);

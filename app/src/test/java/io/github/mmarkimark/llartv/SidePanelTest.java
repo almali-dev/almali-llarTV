@@ -25,6 +25,19 @@ public class SidePanelTest {
         assertEquals(128, SidePanel.scrollFor(128, 256, 300, 800));
     }
 
+    @Test public void aValueListMarksTheSavedOption() {
+        // An ordinary setting: the saved value is marked wherever the focus is (#94).
+        assertEquals(0, SidePanel.markedOption("quote", false, 0));
+        assertEquals(2, SidePanel.markedOption("weather_home", false, 2));
+    }
+
+    @Test public void aListWithoutASavedValueMarksNothing() {
+        // The reset confirmation is an action: Cancel is where the focus starts, not a saved value.
+        assertEquals(-1, SidePanel.markedOption(null, true, 0));
+        // The hidden apps: the list is the apps to unhide, and selected is always 0.
+        assertEquals(-1, SidePanel.markedOption("hidden", false, 0));
+    }
+
     @Test public void aRowTallerThanTheViewShowsItsTop() {
         assertEquals(500, SidePanel.scrollFor(500, 1400, 0, 800));
     }
