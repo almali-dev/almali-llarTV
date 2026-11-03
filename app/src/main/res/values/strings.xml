@@ -10,6 +10,7 @@
     <string name="wifi">Wi-Fi</string>
     <string name="settings">Configuració</string>
     <string name="offline">Sense connexió</string>
+    <string name="no_internet">Sense Internet</string>
     <string name="ethernet">Ethernet</string>
     <string name="connected">Connectat</string>
     <string name="live_tv">TV en directe</string>
