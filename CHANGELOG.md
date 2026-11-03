@@ -5,6 +5,8 @@ All notable changes to LlarTV are documented in this file. The format is based o
 
 ## [Unreleased]
 
+## [1.7] - 2026-11-03
+
 ### Changed
 
 - The quote of the day is re-curated in the three languages (675 lines each, the same number in every language; it was 1,000): the lines are now **short** (at most
@@ -16,6 +18,10 @@ All notable changes to LlarTV are documented in this file. The format is based o
   translations are public-domain ones or LlarTV's own from the public-domain original) and the app behaves exactly
   as in 1.6: the same line all day, the line of the day at `epochDay mod 675`, in the interface language (a file now repeats after 675 days).
   The rules, the curation method and the attribution: [docs/quotes.md](docs/quotes.md).
+- The app is now **Almali LlarTV** and lives at [almali-dev/almali-llartv](https://github.com/almali-dev/almali-llartv):
+  the visible app name, the settings, screensaver and reset texts, the documentation, the issue templates and the
+  scripts use the new identity. The Android application ID is unchanged, so an installed TV updates in place and
+  keeps its settings; the links of earlier releases keep working.
 
 ## [1.6] - 2026-11-01
 
@@ -259,7 +265,8 @@ First release.
 - Scripts to install, configure and uninstall LlarTV over ADB: `scripts/install.sh`, `scripts/config.sh` and
   `scripts/uninstall.sh`.
 
-[Unreleased]: https://github.com/mmarkimark/llartv/compare/v1.6...HEAD
+[Unreleased]: https://github.com/almali-dev/almali-llartv/compare/v1.7...HEAD
+[1.7]: https://github.com/almali-dev/almali-llartv/compare/v1.6...v1.7
 [1.6]: https://github.com/mmarkimark/llartv/compare/v1.5...v1.6
 [1.5]: https://github.com/mmarkimark/llartv/compare/v1.4...v1.5
 [1.4]: https://github.com/mmarkimark/llartv/compare/v1.3...v1.4
