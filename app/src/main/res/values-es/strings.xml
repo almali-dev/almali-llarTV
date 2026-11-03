@@ -6,6 +6,7 @@
     <string name="wifi">Wi-Fi</string>
     <string name="settings">Ajustes</string>
     <string name="offline">Sin conexión</string>
+    <string name="no_internet">Sin Internet</string>
     <string name="ethernet">Ethernet</string>
     <string name="connected">Conectado</string>
     <string name="live_tv">TV en directo</string>
