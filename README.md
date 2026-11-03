@@ -327,7 +327,7 @@ Preferences → Screen saver*.
 
 ## Performance
 
-LlarTV is kept small and fast: the v1.7 APK is 4,227,233 bytes (-0.93% against v1.6: the quote corpora are shorter), with
+LlarTV is kept small and fast: the v1.7 APK is 4,227,237 bytes (-0.93% against v1.6: the quote corpora are shorter), with
 foreground Home PSS about 40 MiB on the emulator and about 60 MiB on the reference TV. Screensaver PSS is a different workload. It does no background
 polling. [`scripts/measure.sh`](scripts/measure.sh) records the APK size, the cold start, the Home return and the RAM
 on a connected TV or emulator. The measured baseline and the regression budgets used as release gates are in
