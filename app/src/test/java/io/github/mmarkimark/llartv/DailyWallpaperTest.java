@@ -97,6 +97,28 @@ public class DailyWallpaperTest {
         assertFalse(DailyWallpaper.ownName(""));
     }
 
+    @Test public void theStampTellsTheSamePhotoFromAnother() throws Exception {
+        // Home decodes only when the stamp moves, so the same photo is never decoded twice (#96).
+        File dir = tmp.newFolder();
+        File a = new File(dir, "wallpaper-a.jpg"), b = new File(dir, "wallpaper-b.jpg");
+        Files.write(a.toPath(), "one".getBytes(StandardCharsets.UTF_8));
+        Files.write(b.toPath(), "one".getBytes(StandardCharsets.UTF_8));
+        assertEquals(DailyWallpaper.stamp(a), DailyWallpaper.stamp(a));
+        assertTrue(DailyWallpaper.stamp(a) != DailyWallpaper.stamp(b));
+        assertEquals(0, DailyWallpaper.stamp(null));
+        long before = DailyWallpaper.stamp(a);
+        Files.write(a.toPath(), "a longer image".getBytes(StandardCharsets.UTF_8));
+        assertTrue(before != DailyWallpaper.stamp(a));
+    }
+
+    @Test public void aPhotoWiderThanTheScreenIsDecodedSmaller() {
+        assertEquals(1, DailyWallpaper.sampleFor(1920, 1920));
+        assertEquals(1, DailyWallpaper.sampleFor(1280, 1920));
+        assertEquals(2, DailyWallpaper.sampleFor(3840, 1920));
+        assertEquals(4, DailyWallpaper.sampleFor(7680, 1920));
+        assertEquals(1, DailyWallpaper.sampleFor(1920, 0));   // the screen size is not known yet
+    }
+
     @Test public void missingImagesAreSkipped() throws Exception {
         File dir = dirWith("wallpaper-a.jpg\tA\ta\nwallpaper-gone.jpg\tB\tb", "wallpaper-a.jpg");
         assertEquals(1, DailyWallpaper.slides(dir).size());
