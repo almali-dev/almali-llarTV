@@ -1416,22 +1416,40 @@ public class HomeActivity extends Activity {
         if (wall == null || !MinimalMode.wallpaperShown(conf)) return;
         File f = DailyWallpaper.shown(MinimalMode.wallpaper(conf), getExternalFilesDir(null), conf.wallpaperMinutes,
                 System.currentTimeMillis());
-        long stamp = f == null ? 0 : f.getName().hashCode() * 31L + (f.lastModified() ^ f.length());
+        long stamp = DailyWallpaper.stamp(f);
         if (stamp == wallStamp) return;
         wallStamp = stamp;
         if (f == null) { wall.setImageDrawable(null); bandBg.setColor(Look.DEFAULT_BAND); return; }
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(f.getPath(), o);
-        int sample = 1;
-        while (o.outWidth / (sample * 2) >= W) sample *= 2;
-        o = new BitmapFactory.Options();
-        o.inSampleSize = sample;
-        o.inPreferredConfig = Bitmap.Config.RGB_565;
-        Bitmap b = BitmapFactory.decodeFile(f.getPath(), o);
-        wall.setImageBitmap(b);
-        int avg = MinimalMode.dockTint(conf) && b != null ? Ui.averageRgb(b) : 0;
-        bandBg.setColor(Look.bandTint((avg >> 16) & 0xFF, (avg >> 8) & 0xFF, avg & 0xFF));
+        // Decoding a screen-sized photo and averaging it costs tens of milliseconds, and onResume calls this, so
+        // doing it here would sit inside the cold start. The first frame does not need the image: it arrives just
+        // after, like the screensaver already does it (#96). A result whose stamp moved on meanwhile is dropped.
+        final File file = f;
+        final long gen = stamp;
+        final boolean tint = MinimalMode.dockTint(conf);
+        new Thread(() -> {
+            Bitmap b = decodeWallpaper(file);
+            int avg = tint && b != null ? Ui.averageRgb(b) : 0;
+            ui.post(() -> {
+                if (gen != wallStamp) return;   // another photo was picked while this one was decoding
+                wall.setImageBitmap(b);
+                bandBg.setColor(Look.bandTint((avg >> 16) & 0xFF, (avg >> 8) & 0xFF, avg & 0xFF));
+            });
+        }).start();
+    }
+
+    /** Decodes a wallpaper no larger than the screen; null when the file is gone or unreadable. */
+    Bitmap decodeWallpaper(File f) {
+        try {
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(f.getPath(), o);
+            BitmapFactory.Options d = new BitmapFactory.Options();
+            d.inSampleSize = DailyWallpaper.sampleFor(o.outWidth, W);
+            d.inPreferredConfig = Bitmap.Config.RGB_565;
+            return BitmapFactory.decodeFile(f.getPath(), d);
+        } catch (Throwable t) {
+            return null;   // a corrupt or half-written file must not take Home down
+        }
     }
 
     static final long WALL_REFETCH_EVERY = 6 * 3600_000L;   // Bing changes once a day; 6 h picks it up the same day
