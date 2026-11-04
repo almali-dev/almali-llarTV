@@ -10,6 +10,15 @@ android {
         versionCode 9
         versionName '1.8'
     }
+    // Measurement candidate for #104: the debug build stays the published variant (same certificate, debuggable,
+    // installed in place), so R8 is the only difference from the v1.8 baseline. Not a release decision.
+    buildTypes {
+        debug {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
