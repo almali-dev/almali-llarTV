@@ -5,6 +5,23 @@ All notable changes to LlarTV are documented in this file. The format is based o
 
 ## [Unreleased]
 
+## [1.9] - 2026-11-04
+
+### Changed
+
+- The APK is about 0.7 MB instead of 4.2 MB (#104). The release build is now shrunk with R8 and resource
+  shrinking, which removes the code the app never runs, mostly the Kotlin standard library that androidx brought
+  in. On the reference TV it starts 155 ms faster (−11.7%) and uses 3.5 MB less memory (−6.5%), with the same
+  behaviour: installing, the settings over ADB and the screensaver were checked on the TV. It installs over v1.8
+  and keeps every setting. Measurements: [docs/performance/minify-v1.8.md](docs/performance/minify-v1.8.md).
+- The performance budgets are measured against the minified build from now on
+  ([baseline](docs/performance/baseline-v1.0.md#rebaseline-for-the-minified-build-v19)), and every release
+  publishes its R8 mapping file next to the APK, so a stack trace from a TV can still be read.
+
+### Fixed
+
+- The v1.8 record now says that the *Sense Internet* pill was seen on screen (on the emulator) (#107).
+
 ## [1.8] - 2026-11-03
 
 ### Added
@@ -293,7 +310,8 @@ First release.
 - Scripts to install, configure and uninstall LlarTV over ADB: `scripts/install.sh`, `scripts/config.sh` and
   `scripts/uninstall.sh`.
 
-[Unreleased]: https://github.com/almali-dev/almali-llartv/compare/v1.8...HEAD
+[Unreleased]: https://github.com/almali-dev/almali-llartv/compare/v1.9...HEAD
+[1.9]: https://github.com/almali-dev/almali-llartv/compare/v1.8...v1.9
 [1.8]: https://github.com/almali-dev/almali-llartv/compare/v1.7...v1.8
 [1.7]: https://github.com/almali-dev/almali-llartv/compare/v1.6...v1.7
 [1.6]: https://github.com/mmarkimark/llartv/compare/v1.5...v1.6

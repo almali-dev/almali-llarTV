@@ -31,6 +31,11 @@ The debug APK is the comparison variant, because the published `v1.0` asset is s
 same build: the released `LlarTV.apk` is 3,999,631 bytes and a fresh debug build of the same source is 3,999,635
 bytes. Sizes are therefore comparable between the released app and any later build.
 
+Since v1.9 the debug build is shrunk with R8 and resource shrinking (#104), so the published APK is still the debug
+build but about 0.7 MB instead of 4.2 MB. Comparisons from v1.9 on use the
+[minified baseline](#rebaseline-for-the-minified-build-v19); the v1.0 numbers below stay as the history of the
+unminified build.
+
 ## Targets
 
 | Target | State |
@@ -83,6 +88,33 @@ relative to the baseline of the same target and the same build variant.
 
 The same rules apply to the TV, with its own baseline as the reference. The TV baseline is recorded (2026-10-28),
 so both targets now have an automatic reference.
+
+## Rebaseline for the minified build (v1.9)
+
+R8 changes the artifact the budgets are relative to, so from v1.9 on the budgets above (+5% APK, +150 ms and +15%
+cold start, +40 ms and +40% Home return, +4,096 KB and +10% RAM) apply to this baseline instead of the v1.0 one.
+Build: the debug build of `main` c0c176f with `minifyEnabled`, `shrinkResources` and
+`proguard-android-optimize.txt`, 739,322 bytes from a clean build (the same source as v1.9 apart from the version
+and the documentation). The limits use the same arithmetic as the v1.0 table: the absolute term of each budget, and
++5% for the APK.
+
+| Target | Cold start | Home return | RAM, TOTAL PSS | APK bytes |
+| --- | --- | --- | --- | --- |
+| Xiaomi MiTV-MSSP3, 2026-11-04 | 1,168 ms | 187 ms | 51,070 KB | 739,322 |
+| Limit on the TV | ≤ 1,318 ms | ≤ 227 ms | ≤ 55,166 KB | ≤ 776,288 |
+| AVD `tv11`, 2026-11-04 | 1,466 ms | 110 ms | 44,138 KB | 739,322 |
+| Emulator limit | ≤ 1,616 ms | ≤ 150 ms | ≤ 48,234 KB | ≤ 776,288 |
+
+- **TV:** the mean of the five round medians of the paired measurement against the published v1.8
+  ([minify-v1.8.md](minify-v1.8.md)): seven cold starts, seven Home returns and three PSS samples per round.
+- **Emulator:** the mean of three round medians of five runs (`.state/minify-emu/`). On the same day the
+  unminified v1.8 build gave 1,429 and 1,472 ms cold start, 131 and 135 ms Home return and 47,757 and 47,742 KB.
+  The emulator's cold start does not separate the two builds, because it renders in software. It is also 70–80 ms
+  slower than the v1.0 emulator baseline for both builds, which comes from the host, not from R8. The RAM is
+  about 3.6 MB lower, as on the TV.
+- **APK budget:** +5% of 739,322 bytes is about 37 KB. That is far tighter than the 200 KB the v1.0 budget
+  allowed, so a new asset (a font, a quote corpus) can exceed it on its own. Such a change is investigated and
+  justified in its release, as the rule above says, not hidden by moving the baseline again.
 
 ## Open items
 

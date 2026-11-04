@@ -7,8 +7,18 @@ android {
         applicationId 'io.github.mmarkimark.llartv'
         minSdk 28          // TV runs Android 9
         targetSdk 33
-        versionCode 9
-        versionName '1.8'
+        versionCode 10
+        versionName '1.9'
+    }
+    // The published APK is this debug build (same certificate as every release, so it installs in place), shrunk
+    // with R8 since v1.9 (#104): about 0.7 MB instead of 4.2 MB. Keep the mapping file of every release
+    // (app/build/outputs/mapping/debug/mapping.txt) with its assets; see CONTRIBUTING.md#releases.
+    buildTypes {
+        debug {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
