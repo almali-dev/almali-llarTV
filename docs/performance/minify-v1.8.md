@@ -124,3 +124,19 @@ Facts for #104, step 3, with no recommendation:
 
 - The owner's decision on #104, step 3. Until then the published artifact is the unminified debug build.
 - If the minified build is adopted: the screensaver music, the football card and the settings panel on the TV.
+
+## Release
+
+The owner chose the minified build as the release artifact (#104), and it shipped as v1.9. The published APK is
+the debug build of `main` `6611da2` (tag `v1.9`), built in a clean detached worktree: 739,322 bytes, SHA-256
+`b1a394f554d11ef2a78fcec7a3438b3936aa6ac778894e3e433f0700253320ec`, versionCode 10, versionName 1.9, with the
+same certificate as v1.8. Its R8 mapping is published next to it as `LlarTV-mapping.txt` (1,488,629 bytes, SHA-256
+`22285ecb27c50cd9470dee8b7a614d478ef8e9fa6f79c0578336f771a7963ca7`). Both were downloaded again from the public
+URLs (`releases/download/v1.9/…`, and `releases/latest/download/LlarTV.apk` for the APK), with HTTP 200, and are
+byte-identical to the built files. The budgets were re-baselined in the same change
+([baseline](baseline-v1.0.md#rebaseline-for-the-minified-build-v19)).
+
+The reference TV was then updated with `scripts/install.sh 192.168.1.52`. Without `--apk`, that is the download
+path users take. The TV now runs the published v1.9 (pulled back, byte-identical), the owner's `home.conf` is
+byte-identical, the screensaver settings and the Home resolution are unchanged, Home shows the weather card, the
+screensaver starts, and the crash buffer has no LlarTV entry.
