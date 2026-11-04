@@ -47,3 +47,10 @@ screenshot to the pull request.
 Releases are tagged `vMAJOR.MINOR` on `main`, recorded in [CHANGELOG.md](CHANGELOG.md) and published on the
 [Releases](https://github.com/almali-dev/almali-llartv/releases) page with the built APK attached. Update
 `versionName` and `versionCode` in `app/build.gradle` for each release.
+
+Since v1.9 the published APK is shrunk with R8 (#104). Build the release in a clean checkout of the tagged commit:
+AGP's incremental packaging can leave megabytes of unused space in an APK built over an older one, so a size is
+only meaningful from a clean build. Attach two assets: `LlarTV.apk` and its `LlarTV-mapping.txt`
+(`app/build/outputs/mapping/debug/mapping.txt` from the same build), which turns an obfuscated stack trace back
+into class and method names. The JVM tests run on unminified classes and cannot see an R8 breakage, so check the
+installer, `scripts/config.sh` and the screensaver on a device before each release.
