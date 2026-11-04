@@ -16,7 +16,7 @@ Checks: JAVA_HOME=$HOME/.local/jdk17 ./gradlew testDebugUnitTest assembleDebug; 
 - T2 [S2] Minified candidate build: size and dex composition, JVM tests — route: parent; status: done (L4); commit: this branch.
 - T3 [S3] Emulator surface check of the minified candidate: Home, settings, screensaver, config.sh read/write, installer — route: parent; status: done on the emulator (L5); the TV half is T4.
 - T4 [S2,S3] Paired reference-TV measurement (five order-balanced pairs x 7 runs against the published v1.8) and the TV surface check — route: parent, owner go-ahead; status: done (L6 measurement, L7 surface check and restore).
-- T5 [S4] Report to #104 and docs/performance; the owner decides — route: parent; status: in progress: report written in docs/performance/minify-v1.8.md; #104 comment and owner decision pending.
+- T5 [S4] Report to #104 and docs/performance; the owner decides — route: parent; status: blocked on the owner's decision; report docs/performance/minify-v1.8.md (5d127e3), #104 comment 6636499138, PR #106 stays draft.
 
 ## Log
 
