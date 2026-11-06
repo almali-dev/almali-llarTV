@@ -5,6 +5,11 @@ All notable changes to LlarTV are documented in this file. The format is based o
 
 ## [Unreleased]
 
+### Added
+
+- Almali LlarTV has its own app icon and Android TV banner (a TV with a dock of apps, from the Almali brand kit),
+  instead of the generic Android icon. The README header shows the "LlarTV · by almali" lockup.
+
 ## [1.9] - 2026-11-04
 
 ### Changed
