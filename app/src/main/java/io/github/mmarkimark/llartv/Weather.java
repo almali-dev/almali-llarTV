@@ -19,6 +19,10 @@ final class Weather {
 
     final int temp, max, min, code;   // °C rounded to int; code is the WMO weather code
     final long fetchedAt;
+    double lat = Double.NaN, lon = Double.NaN;   // the place it was fetched for; NaN for a cache older than that
+
+    /** Two places closer than this (about 2 km) share the weather, so a TV location that wobbles does not refetch. */
+    static final double SAME_PLACE = 0.02;
 
     Weather(int temp, int max, int min, int code, long fetchedAt) {
         this.temp = temp; this.max = max; this.min = min; this.code = code; this.fetchedAt = fetchedAt;
@@ -41,7 +45,15 @@ final class Weather {
     }
 
     static Weather fetch(double lat, double lon) throws Exception {
-        return parse(read(DailyWallpaper.open(url(lat, lon))), System.currentTimeMillis());
+        return parse(read(DailyWallpaper.open(url(lat, lon))), System.currentTimeMillis()).at(lat, lon);
+    }
+
+    /** Records the place asked for (Open-Meteo answers with its grid point, not with the coordinates sent). */
+    Weather at(double lat, double lon) { this.lat = lat; this.lon = lon; return this; }
+
+    /** Whether this weather was fetched for that place; never for a cache that does not say where. */
+    boolean isFor(double lat, double lon) {
+        return Math.abs(this.lat - lat) < SAME_PLACE && Math.abs(this.lon - lon) < SAME_PLACE;
     }
 
     /** An Open-Meteo forecast is about 1 KB; a larger body fails the fetch and the cached weather stays. */
@@ -90,19 +102,21 @@ final class Weather {
 
     /** Writes files/weather.cache as one tab-separated line, via a temp file so a reader never sees half of it. */
     void save(File dir) throws Exception {
-        String line = temp + "\t" + max + "\t" + min + "\t" + code + "\t" + fetchedAt;
+        String line = temp + "\t" + max + "\t" + min + "\t" + code + "\t" + fetchedAt
+                + "\t" + String.format(Locale.ROOT, "%.5f\t%.5f", lat, lon);
         File tmp = new File(dir, CACHE + ".part");
         try (FileOutputStream out = new FileOutputStream(tmp)) { out.write(line.getBytes(StandardCharsets.UTF_8)); }
         if (!tmp.renameTo(new File(dir, CACHE))) { tmp.delete(); throw new Exception("weather cache rename failed"); }
     }
 
-    /** The cached weather, or null when there is none or it can't be read. */
+    /** The cached weather, or null when there is none or it can't be read. A cache of 5 fields predates the place. */
     static Weather load(File dir) {
         try {
             String[] p = new String(Files.readAllBytes(new File(dir, CACHE).toPath()), StandardCharsets.UTF_8).trim().split("\t");
-            if (p.length != 5) return null;
-            return new Weather(Integer.parseInt(p[0]), Integer.parseInt(p[1]), Integer.parseInt(p[2]),
+            if (p.length != 5 && p.length != 7) return null;
+            Weather w = new Weather(Integer.parseInt(p[0]), Integer.parseInt(p[1]), Integer.parseInt(p[2]),
                     Integer.parseInt(p[3]), Long.parseLong(p[4]));
+            return p.length == 7 ? w.at(Double.parseDouble(p[5]), Double.parseDouble(p[6])) : w;
         } catch (Exception e) { return null; }
     }
 }

@@ -1,7 +1,9 @@
 package io.github.mmarkimark.llartv;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Rule;
@@ -112,6 +114,26 @@ public class WeatherTest {
         assertEquals(0, w.code);
         assertEquals(987654321L, w.fetchedAt);
         assertEquals(false, new File(dir, "weather.cache.part").exists());
+    }
+
+    @Test public void theCacheKeepsThePlaceItWasFetchedFor() throws Exception {
+        File dir = tmp.newFolder();
+        Weather.parse(JSON, 5L).at(41.98311, 2.82493).save(dir);
+        Weather w = Weather.load(dir);
+        assertEquals(16, w.temp);
+        assertEquals(5L, w.fetchedAt);
+        assertTrue(w.isFor(41.98311, 2.82493));
+        assertTrue(w.isFor(41.99, 2.83));                       // a TV location a few hundred metres away
+        assertFalse(w.isFor(Config.DEFAULT_LAT, Config.DEFAULT_LON));   // Barcelona is another place
+    }
+
+    @Test public void aCacheFromBeforeThePlaceWasKeptIsForNoPlace() throws Exception {
+        File dir = tmp.newFolder();
+        try (FileWriter w = new FileWriter(new File(dir, "weather.cache"))) { w.write("16\t22\t12\t0\t987654321"); }
+        Weather w = Weather.load(dir);
+        assertEquals(16, w.temp);
+        assertEquals(987654321L, w.fetchedAt);
+        assertFalse(w.isFor(Config.DEFAULT_LAT, Config.DEFAULT_LON));
     }
 
     @Test public void missingOrCorruptCacheIsNull() throws Exception {

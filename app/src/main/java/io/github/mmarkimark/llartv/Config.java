@@ -27,6 +27,7 @@ import java.util.Set;
  *   wallpaper_minutes=30         (default; 0 always shows the newest image)
  *   location=41.4235,2.2010      (latitude,longitude for the weather)
  *   location_name=Barcelona      (the place shown with the weather source)
+ *   location_auto=off            (on: the weather follows the TV's Android location; location is the fallback)
  *   language=ca                  (ca, es or en: the interface language; missing or unknown is Catalan)
  *   news_source=automatic       (automatic, 3cat, bbc-mundo or bbc-world: the news feed; automatic follows language)
  *   news_rss=https://...         (a custom feed; it wins over the preset and is never overwritten by one)
@@ -58,6 +59,7 @@ final class Config {
     static final double DEFAULT_LAT = 41.4235, DEFAULT_LON = 2.2010;
     double lat = DEFAULT_LAT, lon = DEFAULT_LON;   // weather location (La Verneda, Barcelona)
     String locationName;   // home.conf location_name; null when the line is absent (#70)
+    boolean locationAuto = false;   // the weather follows the TV's location (WeatherPlace); lat/lon are the fallback
     String language = Language.DEFAULT;        // "ca", "es" or "en"; never the TV's system language
     String newsSource = NewsSource.AUTOMATIC;   // "automatic", "3cat", "bbc-mundo" or "bbc-world"
     String newsRss = "";           // a custom feed; empty when the preset decides
@@ -150,6 +152,7 @@ final class Config {
                 break;
             }
             case "location_name": locationName = v.trim(); break;
+            case "location_auto": locationAuto = onOff(v, false); break;
             case "language": {
                 String p = Language.parse(v);
                 language = v.trim().isEmpty() ? Language.DEFAULT : p.isEmpty() ? language : p;
