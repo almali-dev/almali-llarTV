@@ -116,6 +116,8 @@ public class HomeActivity extends Activity {
     final List<TextView> cardHeads = new ArrayList<>();   // the card headings, renamed on a language change
     final List<Integer> cardHeadIds = new ArrayList<>();  // their texts (the view tags hold the night-mode colours)
     long lastWx;
+    WeatherPlace lastWxPlace;   // the place of the last weather attempt: another place is fetched at once (S4)
+    boolean tvAsked;           // the TV location was asked for once in this activity (WeatherPlace, S3)
     final NewsSchedule newsSchedule = new NewsSchedule();   // when the headlines have to be fetched again
     boolean wxBusy, newsBusy;
     boolean wxFailed, wallFailed, fixFailed;   // the last attempt failed: retried when the network comes back (#38)
@@ -1520,18 +1522,28 @@ public class HomeActivity extends Activity {
         boolean morning = bands.at(c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE)) == TimeBands.Band.MORNING;
         // The weather is only fetched when a surface still wants it; the screensaver only reads the cache.
         // In minimal mode the panel is never built (panel is null above), and these all read never anyway.
-        if (ContentPolicy.wants(MinimalMode.weatherHome(conf)) || ContentPolicy.wants(MinimalMode.weatherScreen(conf))) maybeFetchWeather(dir, now);
+        boolean wantsWx = ContentPolicy.wants(MinimalMode.weatherHome(conf)) || ContentPolicy.wants(MinimalMode.weatherScreen(conf));
+        // The place the weather is for (S3): the TV's location in automatic, the configured city otherwise.
+        double[] tv = conf.locationAuto ? TvLocation.last(this) : null;
+        if (wantsWx && conf.locationAuto && tv == null && !tvAsked) {
+            tvAsked = true;   // asked once per activity instance; its answer comes back through refreshMorning
+            TvLocation.request(this, this::refreshMorning);
+        }
+        WeatherPlace place = WeatherPlace.resolve(conf, tv);
+        if (wantsWx) maybeFetchWeather(dir, now, place);
         boolean showWx = ContentPolicy.shows(MinimalMode.weatherHome(conf), morning);
         boolean showNews = ContentPolicy.shows(MinimalMode.newsHome(conf), morning);
         if (showNews) maybeFetchNews(dir, now);
         if (!showWx && !showNews) { panel.setVisibility(View.GONE); return; }
 
         Weather w = showWx ? Weather.load(dir) : null;
-        boolean hasWx = w != null && now - w.fetchedAt < 6 * 3600_000L;
+        // Weather fetched for another place is never shown: a city changed meanwhile, or a cache that does not say
+        // where it was fetched for, counts as another place (S4).
+        boolean hasWx = w != null && now - w.fetchedAt < 6 * 3600_000L && w.isFor(place.lat, place.lon);
         if (hasWx) {
             wxTemp.setText(w.temp + "°"); wxLine.setText(Weather.describe(tx, w.code)); wxRange.setText(w.range(tx));
-            String place = conf.locationLabel();
-            wxCredit.setText(place.isEmpty() ? tx.get(R.string.weather_source) : tx.get(R.string.weather_credit, place));
+            // A TV location names only the source: no reverse geocoding (#70).
+            wxCredit.setText(place.label.isEmpty() ? tx.get(R.string.weather_source) : tx.get(R.string.weather_credit, place.label));
         }
         wxCard.setVisibility(hasWx ? View.VISIBLE : View.GONE);
 
@@ -1564,10 +1576,15 @@ public class HomeActivity extends Activity {
         if (any && matchCard != null) matchCard.setVisibility(View.GONE);
     }
 
-    void maybeFetchWeather(File dir, long now) {
-        if (wxBusy || now - lastWx < (Weather.load(dir) == null ? RETRY : WX_EVERY)) return;
+    /** Fetches the weather for a place: at once when the place changed, else WX_EVERY, or RETRY when there is no cache. */
+    void maybeFetchWeather(File dir, long now, WeatherPlace place) {
+        if (wxBusy) return;
+        boolean moved = lastWxPlace != null && (Math.abs(place.lat - lastWxPlace.lat) >= Weather.SAME_PLACE
+                || Math.abs(place.lon - lastWxPlace.lon) >= Weather.SAME_PLACE);
+        if (!moved && now - lastWx < (Weather.load(dir) == null ? RETRY : WX_EVERY)) return;
         wxBusy = true;
-        double lat = conf.lat, lon = conf.lon;
+        lastWxPlace = place;
+        double lat = place.lat, lon = place.lon;
         new Thread(() -> {
             boolean ok;
             try { Weather.fetch(lat, lon).save(dir); ok = true; } catch (Exception ignored) { ok = false; }

@@ -22,9 +22,11 @@ final class WeatherPlace {
 
     /**
      * Whether the screensaver, which never goes online or reads the TV location, may show the cached weather: only
-     * when it was fetched for the configured city, or, in automatic, whatever place Home fetched it for.
+     * when it was fetched for the configured city, or, in automatic, whatever place Home fetched it for (a cache that
+     * does not say where, from before the place was kept, waits for Home's next fetch).
      */
     static boolean screensaverShows(Weather w, Config conf) {
-        return w != null && (conf.locationAuto || w.isFor(conf.lat, conf.lon));
+        if (w == null) return false;
+        return conf.locationAuto ? !Double.isNaN(w.lat) && !Double.isNaN(w.lon) : w.isFor(conf.lat, conf.lon);
     }
 }

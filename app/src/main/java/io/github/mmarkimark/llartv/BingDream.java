@@ -144,7 +144,8 @@ public class BingDream extends DreamService {
         boolean morning = bands != null
                 && bands.at(c.get(java.util.Calendar.HOUR_OF_DAY) * 60 + c.get(java.util.Calendar.MINUTE)) == TimeBands.Band.MORNING;
         Weather w = ContentPolicy.shows(MinimalMode.weatherScreen(conf), morning) ? Weather.load(getExternalFilesDir(null)) : null;
-        boolean fresh = w != null && System.currentTimeMillis() - w.fetchedAt < 6 * 3600_000L;
+        // Weather fetched for another place than Home's is never shown either (S4).
+        boolean fresh = WeatherPlace.screensaverShows(w, conf) && System.currentTimeMillis() - w.fetchedAt < 6 * 3600_000L;
         if (fresh) weather.setText(w.line(tx));
         weather.setVisibility(fresh ? View.VISIBLE : View.GONE);
     }
