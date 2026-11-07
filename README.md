@@ -38,6 +38,7 @@ fetched only while the home screen is showing.
 
 - [Features](#features)
 - [Screenshots](#screenshots)
+- [Minimal mode](#minimal-mode)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -49,6 +50,8 @@ fetched only while the home screen is showing.
 - [Origin and acknowledgements](#origin-and-acknowledgements)
 - [License](#license)
 
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
 ## Features
 
 **Home screen**
@@ -57,7 +60,7 @@ fetched only while the home screen is showing.
 - **Quote of the day** under the date: a traditional saying or a quote by a classic author, the same all day and
   a new one at midnight, in the interface language. The quotes are bundled with the app (no network); turn it off
   with *Frase del dia* in the settings or `quote=off`. Sources and licence: [docs/quotes.md](docs/quotes.md).
-- **Minimal mode** for a faster, quieter Home: *Mode mínim* in the settings or `minimal=on`. One switch turns off
+- **[Minimal mode](#minimal-mode)** for a faster, quieter Home: *Mode mínim* in the settings or `minimal=on`. One switch turns off
   the weather, the news, the quote, the wallpaper and the screensaver photos (the clock and the date on black), the
   football card, the screensaver music and the photo-tinted dock, and Home neither builds nor downloads any of
   them. Your other settings are kept, so switching it off brings back exactly what you had.
@@ -145,6 +148,8 @@ fetched only while the home screen is showing.
 - Interface in Catalan (the default), Spanish or English, chosen under **Configuració → Idioma** or with
   `language=`; it is independent of the TV's system language, time zone and clock format.
 
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
 ## Screenshots
 
 | Morning (08:00–11:00) | Night (23:00–08:00) |
@@ -170,6 +175,29 @@ The settings menu and the screensaver on the TV:
 | --- | --- |
 | ![The LlarTV settings side panel on the TV](docs/screenshots/tv-settings.jpg) | ![The screensaver with the 12-hour clock and the weather on the TV](docs/screenshots/tv-screensaver.jpg) |
 
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
+## Minimal mode
+
+Minimal mode is LlarTV's fast mode: one switch for a quicker, quieter Home. Turn it on with *Mode mínim* in the
+settings, or with `./scripts/config.sh minimal=on`.
+
+![Minimal mode: the clock, the date and the dock on black](docs/screenshots/minimal.jpg)
+
+- **What it turns off:** the weather, the news, the quote of the day, the wallpaper (a black background), the
+  screensaver photos (the clock and the date stay, on black), the football card, the screensaver music and the
+  photo-tinted dock. Home neither builds nor downloads any of them.
+- **What stays:** the greeting, the clock, the date, the top bar, the dock, the app grid and the settings.
+- **What it gains:** on the reference TV (Xiaomi MiTV-MSSP3), Home starts in about 1.1 s instead of 1.6 s
+  (−29.6%), coming back to Home is a quarter faster, and it uses about 16 MB less memory
+  ([measurement](docs/performance/v1.6.md#the-minimal-mode-on-the-same-tv)).
+- **Nothing is lost:** the other settings keep their values while it is on, and they still change in the
+  settings, so switching it off brings back exactly what you had.
+
+*Captured on the Android TV 11 emulator.*
+
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
 ## Requirements
 
 - An Android TV or Google TV with Android 9 or newer.
@@ -181,6 +209,8 @@ The settings menu and the screensaver on the TV:
   | Linux (Debian, Ubuntu) | `sudo apt install adb` |
   | macOS | `brew install --cask android-platform-tools` |
   | Windows | `winget install Google.PlatformTools` |
+
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
 
 ## Installation
 
@@ -242,6 +272,8 @@ did on our own TV, with the toolkit LlarTV grew out of:
 These toolkits belong to their authors and are not part of LlarTV. Read their instructions first, keep the apps you
 use, and prefer disabling packages to uninstalling them, so you can bring them back. LlarTV's own scripts only turn
 off the stock launcher when it would take the Home button back, and `uninstall.sh` restores it.
+
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
 
 ## Configuration
 
@@ -315,6 +347,8 @@ is touched: not `dock.txt`, the downloaded or pushed wallpaper images, the music
 apps, nor Android settings such as the default launcher or screensaver. If the file cannot be read or written, a
 message says so and `home.conf` stays exactly as it was. `scripts/config.sh` keeps working afterwards.
 
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
 ## Screensaver
 
 The screensaver shows the downloaded wallpapers full screen, with a slow zoom and a cross-fade every 25 seconds,
@@ -324,6 +358,8 @@ offline; see [docs/screensaver-music.md](docs/screensaver-music.md).
 
 `install.sh` sets it up. You can also choose it, or switch back to another one, under *Settings → Device
 Preferences → Screen saver*.
+
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
 
 ## Performance
 
@@ -337,6 +373,8 @@ the pairs against the published v1.5, the
 [v1.5 comparison](docs/performance/v1.5.md) the earlier emulator and reference-TV pairs against the published v1.4,
 including a first over-budget TV pair kept next to the larger matched sample that passed; earlier versions are in
 [v1.4](docs/performance/v1.4.md). The released APK is the exact artifact that passed those checks.
+
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
 
 ## Building from source
 
@@ -361,6 +399,8 @@ scripts/                                         Install, configure and uninstal
 docs/design/                                     Design notes
 ```
 
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
 ## Reporting issues
 
 Bugs and feature requests are tracked in [GitHub Issues](https://github.com/almali-dev/almali-llartv/issues).
@@ -378,6 +418,8 @@ Bugs and feature requests are tracked in [GitHub Issues](https://github.com/alma
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guidelines, including branch and commit conventions, and
 [CHANGELOG.md](CHANGELOG.md) for what changed in each release.
 
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
 ## How it was built
 
 LlarTV's own features were developed with [Claude Code](https://claude.com/claude-code) configured by
@@ -394,6 +436,8 @@ Changes are covered by JVM unit tests and checked on the Android TV emulator and
 <a href="https://github.com/Gentleman-Programming/gentle-ai">
   <img width="220" src="https://raw.githubusercontent.com/Gentleman-Programming/gentle-ai/main/docs/assets/brand/built-with-gentle-ai.png" alt="Built with Gentle-AI" />
 </a>
+
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
 
 ## Origin and acknowledgements
 
@@ -419,11 +463,15 @@ Third-party resources:
   [docs/quotes.md](docs/quotes.md).
 - Wallpapers and their titles are provided by Microsoft Bing and remain the property of their respective owners.
 
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
+
 ## Part of Almali
 
 This project is part of [Almali](https://github.com/almali-dev), a small collection of independent, open-source
 tools for home media and self-hosting, built and maintained by [@mmarkimark](https://github.com/mmarkimark).
 Each project works on its own: install only what you need.
+
+<p align="center"><img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="" width="32"></p>
 
 ## License
 
