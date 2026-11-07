@@ -59,4 +59,8 @@ public class WeatherPlaceTest {
         Weather madrid = Weather.parse(WeatherTest.JSON, 0).at(40.4168, -3.7038);
         assertTrue(WeatherPlace.screensaverShows(madrid, girona(true)));
     }
+
+    @Test public void inAutomaticACacheThatDoesNotSayWhereIsNotShown() throws Exception {
+        assertFalse(WeatherPlace.screensaverShows(Weather.parse(WeatherTest.JSON, 0), girona(true)));
+    }
 }

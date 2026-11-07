@@ -1,6 +1,8 @@
 package io.github.mmarkimark.llartv;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -13,8 +15,11 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -26,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * LlarTV's own settings, navigable with the TV remote.
@@ -70,6 +76,11 @@ public class SettingsActivity extends Activity {
     static final int INK = 0xFFE8EAED, INK_DIM = 0xFF9AA0A6, ACCENT = 0xFF8AB4F8;
     static final long SLIDE_MS = 220;
 
+    /** The third choice of the weather location panel: it searches for a city instead of being a saved value. */
+    static final int WEATHER_SEARCH = 2;
+    /** The request code of the location permission; only its answer is read. */
+    static final int LOCATION_PERMISSION = 1;
+
     final List<Row> rows = new ArrayList<>();
     Ui.Fonts fonts;
     View scrim;
@@ -82,6 +93,9 @@ public class SettingsActivity extends Activity {
     Row panelRow;
     Row hiddenRow;                 // the hidden apps: OK opens the list, to unhide one
     Row resetRow;                  // the settings reset: OK opens its confirmation, Cancel first
+    Row weatherRow;                // the weather location: Automatic, the city, or a search for another one
+    Row citiesRow;                 // the results of a city search: OK on one writes it to home.conf
+    List<CitySearch.City> cities = new ArrayList<>();   // the places the results row lists
     Strings tx;                    // the texts of the interface language; rebuilt when the language row changes
     TextView title;
     boolean closing;
@@ -192,6 +206,7 @@ public class SettingsActivity extends Activity {
         addMinimalRow(conf);
         addWallpaperRows(conf);
         addNightRow(conf);
+        addWeatherLocationRow(conf);   // the city the weather is for (S2, S3), right before the two weather rows
         addPolicyRow(tx.get(R.string.weather_home), "weather_home", conf.weatherHome);
         addPolicyRow(tx.get(R.string.weather_screen), "weather_screen", conf.weatherScreen);
         addPolicyRow(tx.get(R.string.news_home), "news_home", conf.newsHome);
@@ -271,6 +286,24 @@ public class SettingsActivity extends Activity {
                         ContentPolicy.value(ContentPolicy.ALL)}, null);
         r.selected = policy;   // NEVER, MORNING and ALL are 0, 1 and 2, the same order as the options
         rows.add(r);
+    }
+
+    /**
+     * The weather location (S2, S3): Automatic first, then the configured city, then the search for another one.
+     * Left/right picks and saves the first two; OK opens all three, and the third opens the search.
+     */
+    void addWeatherLocationRow(Config conf) {
+        weatherRow = new Row(tx.get(R.string.weather_location), "location_auto",
+                new String[]{tx.get(R.string.location_auto), cityLabel(conf), tx.get(R.string.location_search)},
+                new String[]{"on", "off"}, null);
+        weatherRow.selected = conf.locationAuto ? 0 : 1;
+        rows.add(weatherRow);
+    }
+
+    /** The city of a home.conf that does not name it: the coordinates the weather is fetched for (Barcelona by default). */
+    static String cityLabel(Config conf) {
+        String name = conf.locationLabel();
+        return name.isEmpty() ? String.format(Locale.ROOT, "%.4f,%.4f", conf.lat, conf.lon) : name;
     }
 
     /**
@@ -441,24 +474,25 @@ public class SettingsActivity extends Activity {
 
     // ---------------------------------------------------------------- values
 
-    /** Writes one key to home.conf, keeping every other line, and shows the new value. */
-    void persist(Row r, int index) {
-        if (r.isAction()) return;
+    /** Writes one key to home.conf, keeping every other line, and shows the new value; false when it cannot. */
+    boolean persist(Row r, int index) {
+        if (r.isAction()) return false;
         File dir = ConfigLocation.dir(this);
         if (dir == null) {
             Toast.makeText(this, tx.get(R.string.cant_save), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         try {
             String text = Config.read(dir);
             Config.write(dir, Config.setInText(text, r.key, r.values[index]));
         } catch (IOException e) {
             Toast.makeText(this, tx.get(R.string.cant_save), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         r.selected = index;
         r.value.setText(r.options[index]);
         if ("language".equals(r.key)) rebuild();   // the whole panel follows the new language at once
+        return true;
     }
 
     void openPanel(Row r) {
@@ -483,6 +517,93 @@ public class SettingsActivity extends Activity {
         scroll.setVisibility(View.VISIBLE);
         panelRow = null;
         applyFocus();
+    }
+
+    // ---------------------------------------------------------------- the weather location (S2, S3)
+
+    /** A weather location picked: Automatic asks Android for the TV's location and says which city is used without it. */
+    void weatherLocationChosen(int index) {
+        if (index != 0) return;   // a city needs nothing from Android
+        if (!TvLocation.allowed(this)) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION);
+            return;
+        }
+        if (TvLocation.last(this) == null) toastNoTvLocation();
+    }
+
+    /** The owner's answer: a granted permission still may leave a TV without a provider or a known location. */
+    @Override public void onRequestPermissionsResult(int code, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(code, permissions, results);
+        if (code == LOCATION_PERMISSION && TvLocation.last(this) == null) toastNoTvLocation();
+    }
+
+    /** Automatic without a TV location: the weather falls back to the city, and the message names it. */
+    void toastNoTvLocation() { toast(tx.get(R.string.location_no_tv, cityLabel(Config.load(this)))); }
+
+    /** The city search: one text field over the panel; its Search runs the search and Cancel writes nothing. */
+    void openSearchDialog() {
+        EditText input = new EditText(this);
+        input.setSingleLine(true);
+        input.setHint(tx.get(R.string.location_search_hint));
+        input.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        input.setPadding(dp(24), dp(8), dp(24), dp(8));
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(tx.get(R.string.location_search))
+                .setView(input)
+                .setPositiveButton(tx.get(R.string.location_search_go), (d, which) -> searchCity(input.getText().toString()))
+                .setNegativeButton(tx.get(R.string.reset_cancel), null)
+                .create();
+        input.setOnEditorActionListener((v, action, event) -> {   // the search key of the TV keyboard
+            if (action != EditorInfo.IME_ACTION_SEARCH) return false;
+            if (dialog.isShowing()) dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+            return true;
+        });
+        if (dialog.getWindow() != null) dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+    }
+
+    /** Searches Open-Meteo for the typed city; every refusal says so and writes nothing. */
+    void searchCity(String typed) {
+        final String query = typed == null ? "" : typed.trim();
+        if (!CitySearch.searchable(query)) { toast(tx.get(R.string.location_short)); return; }
+        toast(tx.get(R.string.location_searching));
+        final String language = tx.language;
+        new Thread(() -> {
+            List<CitySearch.City> found;
+            try { found = CitySearch.search(query, language); }
+            catch (Exception e) { found = null; }   // offline, a refused request, or an answer that does not parse
+            final List<CitySearch.City> results = found;
+            runOnUiThread(() -> {
+                if (isFinishing()) return;   // the panel is going away: nothing left to show
+                if (results == null) { toast(tx.get(R.string.location_failed)); return; }
+                if (results.isEmpty()) { toast(tx.get(R.string.location_none, query)); return; }
+                showCities(query, results);
+            });
+        }).start();
+    }
+
+    /** The matches of a search as a panel: OK on one writes that city to home.conf. */
+    void showCities(String query, List<CitySearch.City> found) {
+        cities = found;
+        String[] labels = new String[found.size()];
+        for (int i = 0; i < found.size(); i++) labels[i] = found.get(i).label();
+        citiesRow = new Row(tx.get(R.string.location_results, query), SidePanel.CITIES_KEY, labels, null, null);
+        openPanel(citiesRow);
+    }
+
+    /** Writes the city's coordinates, its name and location_auto=off in one write; a failure writes nothing. */
+    void chooseCity(int index) {
+        if (index < 0 || index >= cities.size()) return;
+        CitySearch.City city = cities.get(index);
+        File dir = ConfigLocation.dir(this);
+        if (dir == null) { toast(tx.get(R.string.cant_save)); return; }
+        String text = Config.read(dir);
+        text = Config.setInText(text, "location", city.location());
+        text = Config.setInText(text, "location_name", city.locationName());
+        text = Config.setInText(text, "location_auto", "off");
+        try { Config.write(dir, text); }
+        catch (IOException e) { toast(tx.get(R.string.cant_save)); return; }
+        rebuild();   // the row shows the city just written, with Automatic off
     }
 
     // ---------------------------------------------------------------- navigation
@@ -510,8 +631,11 @@ public class SettingsActivity extends Activity {
             else if (isOk(k)) {
                 Row r = panelRow; int i = panelIdx; closePanel();
                 if (r == resetRow) { resetChoice(i); return; }
-                persist(r, i);
+                if (r == citiesRow) { chooseCity(i); return; }   // a place to choose, not a value of the row
+                if (r == weatherRow && i == WEATHER_SEARCH) { openSearchDialog(); return; }
+                boolean saved = persist(r, i);
                 if (r == hiddenRow) updateHiddenRow(Config.load(this).hidden.size());
+                if (saved && r == weatherRow) weatherLocationChosen(i);
                 return;
             }
             else if (k == B) { closePanel(); return; }
@@ -528,7 +652,7 @@ public class SettingsActivity extends Activity {
             int next = r.selected + (k == R ? 1 : -1);
             if (next < 0) next = r.values.length - 1;
             if (next >= r.values.length) next = 0;
-            persist(r, next);
+            if (persist(r, next) && r == weatherRow) weatherLocationChosen(next);
         }
         else if (isOk(k)) {
             if (r == resetRow) { openResetPanel(); return; }

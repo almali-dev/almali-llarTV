@@ -86,6 +86,18 @@
     <string name="clock_12">12 h</string>
     <string name="weather_home">Tiempo en la pantalla</string>
     <string name="weather_screen">Tiempo en el salvapantallas</string>
+    <!-- The weather location: Automatic (the TV's own location) or a city searched in Open-Meteo -->
+    <string name="weather_location">Ubicación del tiempo</string>
+    <string name="location_auto">Automático (ubicación de la tele)</string>
+    <string name="location_search">Buscar una ciudad…</string>
+    <string name="location_search_hint">Nombre de la ciudad</string>
+    <string name="location_search_go">Buscar</string>
+    <string name="location_searching">Buscando…</string>
+    <string name="location_short">Escribe al menos dos letras</string>
+    <string name="location_failed">No se ha podido buscar. Comprueba la conexión.</string>
+    <string name="location_none">Ninguna ciudad para «%1$s»</string>
+    <string name="location_results">Resultados para «%1$s»</string>
+    <string name="location_no_tv">La tele no da ninguna ubicación: se usa %1$s</string>
     <string name="news_home">Noticias en la pantalla</string>
     <string name="quote">Frase del día</string>
     <string name="minimal">Modo mínimo</string>

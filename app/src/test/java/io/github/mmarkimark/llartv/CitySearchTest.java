@@ -5,11 +5,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
 import java.util.List;
 
 public class CitySearchTest {
+    @Rule public TemporaryFolder tmp = new TemporaryFolder();
+
     // Shape returned by Open-Meteo's geocoding API for name=Girona&language=ca (postcodes trimmed).
     static final String GIRONA = "{\"results\":[{\"id\":3121456,\"name\":\"Girona\",\"latitude\":41.98311,\"longitude\":2.82493,"
             + "\"elevation\":81.0,\"feature_code\":\"PPLA2\",\"country_code\":\"ES\",\"timezone\":\"Europe/Madrid\","
@@ -47,6 +52,23 @@ public class CitySearchTest {
         assertEquals(41.98311, k.lat, 1e-9);
         assertEquals(2.82493, k.lon, 1e-9);
         assertEquals("Girona", k.locationLabel());
+    }
+
+    @Test public void theNameWrittenToHomeConfCarriesNoCommentMarkerNorLineBreak() throws Exception {
+        // home.conf reads '#' as the start of a comment and one key per line, so the stored name has neither.
+        CitySearch.City c = CitySearch.parse("{\"results\":[{\"name\": \"Girona\\r\\nEstartit#Nord \","
+                + "\"latitude\": 41.98, \"longitude\": 2.82}]}").get(0);
+        assertEquals("GironaEstartitNord", c.locationName());
+        assertEquals("Girona\r\nEstartit#Nord", c.name);   // the row still shows what Open-Meteo answered
+    }
+
+    @Test public void aChosenCityWritesOneNameLineThatReadsBackWhole() throws Exception {
+        CitySearch.City c = CitySearch.parse("{\"results\":[{\"name\":\"Girona #1\\n2\","
+                + "\"latitude\":41.98,\"longitude\":2.82}]}").get(0);
+        File dir = tmp.getRoot();
+        Config.write(dir, Config.setInText("", "location_name", c.locationName()));
+        assertEquals("location_name=Girona 12\n", Config.read(dir));   // one line, and no comment starts in it
+        assertEquals("Girona 12", Config.parse(dir).locationLabel());
     }
 
     @Test public void noMatchIsAnEmptyList() throws Exception {

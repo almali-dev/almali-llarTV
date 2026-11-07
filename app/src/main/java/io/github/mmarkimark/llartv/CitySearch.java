@@ -39,6 +39,12 @@ final class CitySearch {
 
         /** The home.conf location value, "lat,lon". */
         String location() { return String.format(Locale.ROOT, "%.5f,%.5f", lat, lon); }
+
+        /**
+         * The home.conf location_name value: one line and no comment, because '#' starts a comment and every line is
+         * a key of its own. The row still shows the name as Open-Meteo sent it.
+         */
+        String locationName() { return name.replace("#", "").replace("\r", "").replace("\n", "").trim(); }
     }
 
     private CitySearch() {}
