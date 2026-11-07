@@ -212,7 +212,7 @@ public class LanguageTest {
             // formats, separators and the shortening of ESPN's competition names (external data)
             "Clock.java:h:mm a", "Ui.java:'wght' ", "DailyWallpaper.java: ", "News.java: ",
             "HomeActivity.java:  ·  ", "HomeActivity.java: · ", "HomeActivity.java: (AV)", "HomeActivity.java:unknown ssid",
-            "Weather.java:° · ", "Fixtures.java:UEFA ", "Fixtures.java:English ", "Fixtures.java:FA Community Shield",
+            "Weather.java:° · ", "CitySearch.java:, ", "Fixtures.java:UEFA ", "Fixtures.java:English ", "Fixtures.java:FA Community Shield",
             "Fixtures.java:Community Shield", "Fixtures.java:^\\\\d{4}-\\\\d{2} ",
             "DreamMusic.java:), staying silent"));   // the second line of a log call
 
