@@ -322,4 +322,31 @@ public class ConfigTest {
         k.set("location_name", "");
         assertEquals("", k.locationLabel());
     }
+
+    // ---------------------------------------------------------------- automatic weather location
+
+    @Test public void theAutomaticLocationIsOffByDefaultSoTheCityStays() {
+        assertFalse(new Config().locationAuto);
+    }
+
+    @Test public void theAutomaticLocationIsReadAsOnOff() {
+        Config k = new Config();
+        k.set("location_auto", "on");
+        assertTrue(k.locationAuto);
+        k.set("location_auto", "off");
+        assertFalse(k.locationAuto);
+        k.set("location_auto", "on");
+        k.set("location_auto", "");   // an empty value restores the default
+        assertFalse(k.locationAuto);
+    }
+
+    @Test public void theAutomaticLocationKeepsTheCityAsTheFallback() {
+        Config k = new Config();
+        k.set("location", "41.98,2.82");
+        k.set("location_name", "Girona");
+        k.set("location_auto", "on");
+        assertEquals(41.98, k.lat, 1e-9);
+        assertEquals(2.82, k.lon, 1e-9);
+        assertEquals("Girona", k.locationLabel());
+    }
 }

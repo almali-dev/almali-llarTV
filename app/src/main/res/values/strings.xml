@@ -90,6 +90,18 @@
     <string name="clock_12">12 h</string>
     <string name="weather_home">Temps a la pantalla</string>
     <string name="weather_screen">Temps al protector</string>
+    <!-- The weather location: Automatic (the TV's own location) or a city searched in Open-Meteo -->
+    <string name="weather_location">Ubicació del temps</string>
+    <string name="location_auto">Automàtic (ubicació de la tele)</string>
+    <string name="location_search">Cerca una ciutat…</string>
+    <string name="location_search_hint">Nom de la ciutat</string>
+    <string name="location_search_go">Cerca</string>
+    <string name="location_searching">Cercant…</string>
+    <string name="location_short">Escriu almenys dues lletres</string>
+    <string name="location_failed">No s\'ha pogut cercar. Comprova la connexió.</string>
+    <string name="location_none">Cap ciutat per a «%1$s»</string>
+    <string name="location_results">Resultats per a «%1$s»</string>
+    <string name="location_no_tv">La tele no dona cap ubicació: es fa servir %1$s</string>
     <string name="news_home">Notícies a la pantalla</string>
     <string name="quote">Frase del dia</string>
     <string name="minimal">Mode mínim</string>

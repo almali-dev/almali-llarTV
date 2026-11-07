@@ -10,6 +10,9 @@ final class SidePanel {
     /** The settings row whose value list is a list of apps to unhide, not a list of values. */
     static final String HIDDEN_KEY = "hidden";
 
+    /** The settings panel that lists the cities of a search: places to choose from, not the values of a row. */
+    static final String CITIES_KEY = "cities";
+
     /**
      * The option a value list marks as the saved one, or -1 when the list has no saved value. The focus moves
      * while the list is open, so without this mark nothing on screen says which value is in use (#94).
@@ -21,6 +24,7 @@ final class SidePanel {
     static int markedOption(String key, boolean action, int selected) {
         if (action) return -1;                   // the reset confirmation starts on Cancel: a choice, not a value
         if (HIDDEN_KEY.equals(key)) return -1;   // the hidden apps: every entry is an app to unhide
+        if (CITIES_KEY.equals(key)) return -1;   // the cities of a search: every entry is a place to choose
         return selected;
     }
 

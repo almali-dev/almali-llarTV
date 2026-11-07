@@ -86,6 +86,18 @@
     <string name="clock_12">12 h</string>
     <string name="weather_home">Weather on Home</string>
     <string name="weather_screen">Weather on the screensaver</string>
+    <!-- The weather location: Automatic (the TV's own location) or a city searched in Open-Meteo -->
+    <string name="weather_location">Weather location</string>
+    <string name="location_auto">Automatic (TV location)</string>
+    <string name="location_search">Search for a city…</string>
+    <string name="location_search_hint">City name</string>
+    <string name="location_search_go">Search</string>
+    <string name="location_searching">Searching…</string>
+    <string name="location_short">Type at least two letters</string>
+    <string name="location_failed">Couldn\'t search. Check the connection.</string>
+    <string name="location_none">No city found for “%1$s”</string>
+    <string name="location_results">Results for “%1$s”</string>
+    <string name="location_no_tv">The TV gives no location: using %1$s</string>
     <string name="news_home">News on Home</string>
     <string name="quote">Quote of the day</string>
     <string name="minimal">Minimal mode</string>

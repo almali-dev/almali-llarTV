@@ -110,6 +110,13 @@ fetched only while the home screen is showing.
   hour or 3 hours, or *Fixa*: always the newest photo, which still changes when Bing publishes a new one), and night
   mode off or one of several ranges across midnight. An image URL, an interval or a range set by the scripts is kept
   and shown as one more choice.
+- Ubicació del temps (weather location): ◀ ▶ switches between *Automàtic* and the current city; OK opens the
+  list, where *Cerca una ciutat…* asks for a name with the TV keyboard, searches it with Open-Meteo's free geocoding
+  service and lists the matches ("Girona, Catalunya, Espanya"). Picking one writes `location`, `location_name` and
+  `location_auto=off`. *Automàtic* (`location_auto=on`) follows the TV's Android location, asking for the location
+  permission when it is missing; many TVs have no location at all, and then the current city is used and the
+  settings say so. With a TV location the weather card shows only "Open-Meteo", because LlarTV does not look up the
+  name of a place from its coordinates.
 - Screensaver clock and motion: hide the time (the date, the weather and the photo credits stay) and turn off the
   slow zoom, so each photo stays still and still changes every 25 seconds with a fade.
 - Quiet night screensaver (both off by default, each independent): *Protector discret de nit* shows only the
@@ -288,6 +295,7 @@ the remote. Both ways write to the same file, so it does not matter which one yo
 ./scripts/config.sh --dock                         # choose the dock apps from a list
 ./scripts/config.sh night=22:30-07:30 columns=5    # change one or more settings
 ./scripts/config.sh location=41.98,2.82 location_name=Girona   # weather for another place, with its name
+./scripts/config.sh location_auto=on               # weather where the TV is, when Android knows it
 ./scripts/config.sh night=                         # an empty value restores the default
 ./scripts/config.sh --show                         # show what you have changed
 ```
@@ -304,6 +312,7 @@ the remote. Both ways write to the same file, so it does not matter which one yo
 | `night` | `23:00-08:00` | Night mode time range; `off` turns it off. |
 | `location` | `41.4235,2.2010` (Barcelona) | `latitude,longitude` used for the weather. |
 | `location_name` | `Barcelona` | The place shown with the weather source on the weather card ("Barcelona · Open-Meteo"). Without this line it is `Barcelona` only for the default `location`; for another place set it, for example `location_name=Girona`. An empty value shows only the source. |
+| `location_auto` | `off` | `on`: the weather follows the TV's Android location, and `location`/`location_name` are used only when Android has none (many TVs have none) or LlarTV lacks the location permission. With a TV location the card shows only "Open-Meteo". |
 | `language` | `ca` | Interface language: `ca` (Catalan), `es` (Spanish) or `en` (English). A new installation and an upgraded one without this line are in Catalan; an unknown value keeps Catalan. It never changes the TV's system language, time zone or clock format. |
 | `news_source` | `automatic` | News source: `automatic` (follows `language`: 3Cat, BBC News Mundo or BBC News World), `3cat`, `bbc-mundo` or `bbc-world`. |
 | `news_rss` | empty | Custom RSS feed for the morning headlines; it wins over `news_source` and is never overwritten by it. Remove the line to use a preset again. |

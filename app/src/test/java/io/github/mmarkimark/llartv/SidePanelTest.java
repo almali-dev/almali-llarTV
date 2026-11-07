@@ -36,6 +36,9 @@ public class SidePanelTest {
         assertEquals(-1, SidePanel.markedOption(null, true, 0));
         // The hidden apps: the list is the apps to unhide, and selected is always 0.
         assertEquals(-1, SidePanel.markedOption("hidden", false, 0));
+        // The cities of a search: every entry is a place to choose, never a value saved in home.conf.
+        assertEquals(-1, SidePanel.markedOption(SidePanel.CITIES_KEY, false, 0));
+        assertEquals(-1, SidePanel.markedOption(SidePanel.CITIES_KEY, false, 1));
     }
 
     @Test public void aRowTallerThanTheViewShowsItsTop() {

@@ -9,6 +9,15 @@ All notable changes to LlarTV are documented in this file. The format is based o
 
 - Almali LlarTV has its own app icon and Android TV banner (a TV with a dock of apps, from the Almali brand kit),
   instead of the generic Android icon. The README header shows the "LlarTV · by almali" lockup.
+- The weather city can be chosen in the settings: *Ubicació del temps* searches a city by name with Open-Meteo's
+  free geocoding service and lists the matches to pick from. Its first choice, *Automàtic* (`location_auto=on`),
+  follows the TV's Android location and keeps the current city when the TV has none, which many TVs do. The
+  default is still Barcelona, and `location` and `location_name` work as before.
+
+### Fixed
+
+- After a change of place the weather card and the screensaver no longer show the weather of the previous place:
+  the weather cache now records where it was fetched for, and Home fetches it again at once.
 
 ## [1.9] - 2026-11-04
 
